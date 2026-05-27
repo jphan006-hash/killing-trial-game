@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Apex Fate Academy</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to bottom, #120018, #260033, #000);
+    color: white;
+    overflow-x: hidden;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background: rgba(0,0,0,0.5);
+    border-bottom: 3px solid hotpink;
+}
+
+header h1 {
+    font-size: 50px;
+    color: hotpink;
+    text-shadow: 0 0 20px hotpink;
+}
+
+header p {
+    color: #ddd;
+}
+
+#main-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.student-card {
+    width: 220px;
+    background: rgba(255,255,255,0.08);
+    border: 2px solid #ff4fd8;
+    border-radius: 15px;
+    padding: 15px;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.student-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px hotpink;
+}
+
+.student-name {
+    font-size: 24px;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.student-talent {
+    color: #ff9df2;
+    margin-bottom: 10px;
+}
+
+.status {
+    font-weight: bold;
+}
+
+.alive {
+    color: lime;
+}
+
+.dead {
+    color: red;
+}
+
+button {
+    margin-top: 10px;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background: hotpink;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+    font-weight: bold;
+}
+
+button:hover {
+    background: deeppink;
+}
+
+#chapter-box {
+    margin: 20px auto;
+    width: 85%;
+    background: rgba(255,255,255,0.08);
+    border: 3px solid cyan;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+}
+
+#chapter-title {
+    font-size: 40px;
+    color: cyan;
+    text-shadow: 0 0 15px cyan;
+}
+
+#story-text {
+    font-size: 20px;
+    margin-top: 15px;
+}
+
+#trial-room {
+    margin: 30px auto;
+    width: 90%;
+    background: rgba(0,0,0,0.6);
+    border: 3px solid red;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#trial-room h2 {
+    color: red;
+    text-align: center;
+    font-size: 40px;
+}
+
+#evidence-box {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+
+.evidence {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid yellow;
+    border-radius: 10px;
+    padding: 10px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.flash {
+    animation: flash 0.4s infinite alternate;
+}
+
+@keyframes flash {
+    from {
+        box-shadow: 0 0 10px red;
+    }
+    to {
+        box-shadow: 0 0 30px white;
+    }
+}
+
+#dialogue-box {
+    width: 80%;
+    margin: 30px auto;
+    background: rgba(255,255,255,0.08);
+    border-left: 8px solid hotpink;
+    padding: 20px;
+    font-size: 22px;
+}
+
+#survivor-counter {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: gold;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>Apex Fate Academy</h1>
+    <p>36 Ultimates. One killing game. Only 5 survive.</p>
+</header>
+
+<div id="chapter-box">
+    <div id="chapter-title">Chapter 1 — First Blood</div>
+    <div id="story-text">
+        Manako Ishi awakens inside Apex Fate Academy alongside 35 other Ultimates.
+        Kurobane announces the rules of the killing game.
+    </div>
+</div>
+
+<div id="survivor-counter">
+    Survivors Remaining: <span id="count">36</span>
+</div>
+
+<div id="main-container"></div>
+
+<div id="dialogue-box">
+    <b>Manako Ishi:</b>
+    “Why am I even here...? I lose at everything...”
+</div>
+
+<div id="trial-room">
+    <h2>CLASS TRIAL</h2>
+
+    <div id="evidence-box">
+        <div class="evidence">Broken Drumstick</div>
+        <div class="evidence">Footprints</div>
+        <div class="evidence">Security Recording</div>
+        <div class="evidence">Blood Stain</div>
+    </div>
+</div>
+
+<script>
+const students = [
+    ["Manako Ishi", "Ultimate Game Loser"],
+    ["Jaxon Vale", "Ultimate Street Racer"],
+    ["Miyu Takahara", "Ultimate Violinist"],
+    ["Dante Cruz", "Ultimate Escape Artist"],
+    ["Selene Harper", "Ultimate Astronomer"],
+    ["Kai Nakamura", "Ultimate Hacker"],
+    ["Alyssa Monroe", "Ultimate Fashion Designer"],
+    ["Riku Sano", "Ultimate Martial Artist"],
+    ["Noelle Winters", "Ultimate Ice Skater"],
+    ["Bryce Holloway", "Ultimate Debate Champion"],
+    ["Lena Voss", "Ultimate Magician"],
+    ["Theo Mercer", "Ultimate Detective"],
+    ["Emiko Rai", "Ultimate Voice Actor"],
+    ["Zane Callister", "Ultimate Parkour Runner"],
+    ["Ivy Laurent", "Ultimate Botanist"],
+    ["Miles Ortega", "Ultimate Drummer"],
+    ["Haruka Shin", "Ultimate Archer"],
+    ["Carter Flynn", "Ultimate Stunt Performer"],
+    ["Sora Minami", "Ultimate Inventor"],
+    ["Natalie Quinn", "Ultimate Swimmer"],
+    ["Victor Graves", "Ultimate Poker Player"],
+    ["Yumi Aizawa", "Ultimate Baker"],
+    ["Elias Rowan", "Ultimate Photographer"],
+    ["Freya Solis", "Ultimate Fire Dancer"],
+    ["Kieran Blake", "Ultimate Chess Master"],
+    ["Aoi Fujimoto", "Ultimate Idol"],
+    ["Damien Wolfe", "Ultimate Survivalist"],
+    ["Clara Everhart", "Ultimate Novelist"],
+    ["Ren Takeda", "Ultimate Swordsman"],
+    ["Sophia Vega", "Ultimate Actress"],
+    ["Logan Pierce", "Ultimate Mechanic"],
+    ["Akari Hoshino", "Ultimate Lucky Student"],
+    ["Nico Romero", "Ultimate DJ"],
+    ["Valerie Knight", "Ultimate Psychologist"],
+    ["Tobias Reed", "Ultimate Bodyguard"],
+    ["Kaede Morimoto", "Ultimate Toxicologist"]
+];
+
+const container = document.getElementById("main-container");
+const count = document.getElementById("count");
+
+let survivors = students.length;
+
+students.forEach(student => {
+    const card = document.createElement("div");
+    card.className = "student-card";
+
+    card.innerHTML = `
+        <div class="student-name">${student[0]}</div>
+        <div class="student-talent">${student[1]}</div>
+        <div class="status alive">ALIVE</div>
+        <button>Eliminate</button>
+    `;
+
+    const button = card.querySelector("button");
+    const status = card.querySelector(".status");
+
+    button.addEventListener("click", () => {
+        if(status.classList.contains("alive")) {
+            status.textContent = "DEAD";
+            status.classList.remove("alive");
+            status.classList.add("dead");
+            card.classList.add("flash");
+            button.textContent = "Eliminated";
+            survivors--;
+            count.textContent = survivors;
+
+            if(survivors === 5) {
+                document.getElementById("story-text").innerHTML = `
+                    Only five survivors remain inside Apex Fate Academy...<br><br>
+                    The final trial is about to begin.
+                `;
+            }
+        }
+    });
+
+    container.appendChild(card);
+});
+
+
+// ===== INVESTIGATION SYSTEM =====
+const evidenceList = [
+    "Broken Drumstick",
+    "Bloody Shoeprint",
+    "Security Key",
+    "Hidden Note",
+    "Bent Metal Pipe"
+];
+
+const evidenceBox = document.getElementById("evidence-box");
+
+function addEvidence(item) {
+    const div = document.createElement("div");
+    div.className = "evidence flash";
+    div.innerText = item;
+    evidenceBox.appendChild(div);
+}
+
+setTimeout(() => {
+    addEvidence("Mysterious Fingerprint");
+}, 3000);
+
+// ===== CHAPTER TRANSITIONS =====
+const chapters = [
+    "Chapter 1 — First Blood",
+    "Chapter 2 — Burning Spotlight",
+    "Chapter 3 — Frozen Lies",
+    "Chapter 4 — Wild Hunt",
+    "Chapter 5 — Final Despair"
+];
+
+let currentChapter = 0;
+
+function nextChapter() {
+    currentChapter++;
+
+    if(currentChapter < chapters.length) {
+        document.getElementById("chapter-title").innerText = chapters[currentChapter];
+
+        document.getElementById("story-text").innerHTML = `
+            A new motive has appeared...<br><br>
+            Fear spreads across Apex Fate Academy.
+        `;
+    }
+}
+
+// ===== RELATIONSHIP SYSTEM =====
+const relationships = {
+    "Kai Nakamura": 0,
+    "Haruka Shin": 0,
+    "Yumi Aizawa": 0,
+    "Miyu Takahara": 0
+};
+
+function increaseBond(name) {
+    relationships[name]++;
+    console.log(name + " Bond Level: " + relationships[name]);
+}
+
+increaseBond("Kai Nakamura");
+increaseBond("Yumi Aizawa");
+
+// ===== EVIDENCE SHOOTING GAMEPLAY =====
+const trialRoom = document.getElementById("trial-room");
+
+const target = document.createElement("div");
+target.innerText = "WEAK ARGUMENT";
+target.style.background = "red";
+target.style.padding = "20px";
+target.style.margin = "20px auto";
+target.style.width = "220px";
+target.style.textAlign = "center";
+target.style.borderRadius = "12px";
+target.style.cursor = "pointer";
+target.style.fontWeight = "bold";
+trialRoom.appendChild(target);
+
+const truthBullet = document.createElement("button");
+truthBullet.innerText = "FIRE TRUTH BULLET";
+truthBullet.style.background = "cyan";
+truthBullet.style.color = "black";
+truthBullet.style.fontSize = "20px";
+trialRoom.appendChild(truthBullet);
+
+truthBullet.addEventListener("click", () => {
+    target.innerText = "ARGUMENT DESTROYED!";
+    target.style.background = "lime";
+    target.classList.add("flash");
+});
+
+// ===== CHARACTER SPRITES =====
+students.forEach((studentCard, index) => {
+    const cards = document.querySelectorAll(".student-card");
+    const sprite = document.createElement("div");
+
+    sprite.style.height = "120px";
+    sprite.style.borderRadius = "12px";
+    sprite.style.marginBottom = "10px";
+    sprite.style.background = `hsl(${index * 20}, 70%, 45%)`;
+    sprite.style.display = "flex";
+    sprite.style.alignItems = "center";
+    sprite.style.justifyContent = "center";
+    sprite.style.fontWeight = "bold";
+    sprite.innerText = "SPRITE";
+
+    cards[index].prepend(sprite);
+});
+
+// ===== EXECUTIONS =====
+function executionScene(name) {
+    const overlay = document.createElement("div");
+
+    overlay.style.position = "fixed";
+    overlay.style.top = 0;
+    overlay.style.left = 0;
+    overlay.style.width = "100%";
+    overlay.style.height = "100%";
+    overlay.style.background = "black";
+    overlay.style.color = "red";
+    overlay.style.display = "flex";
+    overlay.style.flexDirection = "column";
+    overlay.style.justifyContent = "center";
+    overlay.style.alignItems = "center";
+    overlay.style.fontSize = "50px";
+    overlay.style.zIndex = 9999;
+
+    overlay.innerHTML = `
+        EXECUTION TIME<br><br>
+        ${name}<br><br>
+        PUNISHED
+    `;
+
+    document.body.appendChild(overlay);
+
+    setTimeout(() => {
+        overlay.remove();
+    }, 4000);
+}
+
+setTimeout(() => {
+    executionScene("Carter Flynn");
+}, 6000);
+
+// ===== MASTERMIND REVEAL =====
+function mastermindReveal() {
+    const reveal = document.createElement("div");
+
+    reveal.style.position = "fixed";
+    reveal.style.top = 0;
+    reveal.style.left = 0;
+    reveal.style.width = "100%";
+    reveal.style.height = "100%";
+    reveal.style.background = "darkred";
+    reveal.style.color = "white";
+    reveal.style.display = "flex";
+    reveal.style.flexDirection = "column";
+    reveal.style.justifyContent = "center";
+    reveal.style.alignItems = "center";
+    reveal.style.fontSize = "40px";
+    reveal.style.zIndex = 99999;
+
+    reveal.innerHTML = `
+        MASTERMIND REVEALED<br><br>
+        CLARA EVERHART<br><br>
+        Ultimate Novelist
+    `;
+
+    document.body.appendChild(reveal);
+}
+
+// ===== MUSIC =====
+const music = new Audio("https://cdn.pixabay.com/audio/2022/03/15/audio_c8a0a4f6f5.mp3");
+music.loop = true;
+
+window.addEventListener("click", () => {
+    music.play();
+}, { once:true });
+
+// ===== TRIAL VOTING =====
+const voteButton = document.createElement("button");
+voteButton.innerText = "START VOTE";
+voteButton.style.fontSize = "22px";
+voteButton.style.marginTop = "20px";
+trialRoom.appendChild(voteButton);
+
+voteButton.addEventListener("click", () => {
+    document.getElementById("dialogue-box").innerHTML = `
+        <b>Kurobane:</b><br>
+        Time to vote for the blackened...
+    `;
+
+    setTimeout(() => {
+        executionScene("Blackened Student");
+    }, 3000);
+});
+
+// ===== FINAL CHAPTER =====
+setTimeout(() => {
+    nextChapter();
+}, 10000);
+
+setTimeout(() => {
+    mastermindReveal();
+}, 20000);
+
+</script>
+</body>
+</html>
